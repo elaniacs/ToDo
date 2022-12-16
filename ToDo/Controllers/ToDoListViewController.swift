@@ -52,10 +52,10 @@ class ToDoListViewController: UITableViewController {
     //detects which line was selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
         context.delete(itemArray[indexPath.row])
         itemArray.remove(at: indexPath.row)
-        
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         saveItems()
         
@@ -112,6 +112,8 @@ class ToDoListViewController: UITableViewController {
         catch {
             print("Error fetching data from context, \(error)")
         }
+        
+        tableView.reloadData()
     }
 }
 
@@ -124,6 +126,16 @@ extension ToDoListViewController: UISearchBarDelegate {
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            print("Main Thread ?",Thread.current.isMainThread)
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
     }
 }
 
