@@ -47,7 +47,9 @@ class ToDoListViewController: UITableViewController {
     
     //detects which line was selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(itemArray[indexPath.row])
+        
+        context.delete(itemArray[indexPath.row])
+        itemArray.remove(at: indexPath.row)
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
